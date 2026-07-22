@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Notes Summarizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meeting Notes Summarizer</h1>
+            <p class="subtitle">Transform your transcripts into organized, professional notes</p>
+        </header>
+
+        <!-- Meeting Details -->
+        <div class="meeting-details">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="meetingTitle">Title:</label>
+                    <input type="text" id="meetingTitle" placeholder="Meeting title or topic">
+                </div>
+                <div class="form-group">
+                    <label for="meetingDate">Date:</label>
+                    <input type="date" id="meetingDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="attendees">Attendees/Participants:</label>
+                <input type="text" id="attendees" placeholder="Enter names separated by commas">
+            </div>
+        </div>
+
+        <!-- Template Selection -->
+        <div class="template-section">
+            <h2>Select Template</h2>
+            <div class="template-options">
+                <label class="template-option">
+                    <input type="radio" name="template" value="business" checked>
+                    <span class="template-card">
+                        <div class="template-icon">💼</div>
+                        <div class="template-name">Business</div>
+                        <div class="template-desc">Client meetings, team meetings</div>
+                    </span>
+                </label>
+                <label class="template-option">
+                    <input type="radio" name="template" value="education">
+                    <span class="template-card">
+                        <div class="template-icon">🎓</div>
+                        <div class="template-name">Education</div>
+                        <div class="template-desc">Lectures, class sessions</div>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Input Methods -->
+        <div class="input-section">
+            <h2>Input Method</h2>
+            <div class="input-tabs">
+                <button class="tab-btn active" data-tab="paste">Paste Transcript</button>
+                <button class="tab-btn" data-tab="record">Live Recording</button>
+                <button class="tab-btn" data-tab="upload">Upload Audio</button>
+            </div>
+
+            <!-- Paste Transcript Tab -->
+            <div class="tab-content active" id="paste-tab">
+                <textarea id="transcriptInput" placeholder="Paste your meeting transcript here..."></textarea>
+            </div>
+
+            <!-- Live Recording Tab -->
+            <div class="tab-content" id="record-tab">
+                <div class="recording-controls">
+                    <button id="startRecording" class="btn-primary">
+                        <span class="btn-icon">🎤</span>
+                        Start Recording
+                    </button>
+                    <button id="stopRecording" class="btn-danger" disabled>
+                        <span class="btn-icon">⏹️</span>
+                        Stop Recording
+                    </button>
+                </div>
+                <div class="recording-status" id="recordingStatus"></div>
+                <textarea id="liveTranscript" placeholder="Live transcript will appear here as you speak..." readonly></textarea>
+            </div>
+
+            <!-- Upload Audio Tab -->
+            <div class="tab-content" id="upload-tab">
+                <div class="upload-area">
+                    <input type="file" id="audioUpload" accept="audio/*" hidden>
+                    <label for="audioUpload" class="upload-label">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">Click to upload audio file</div>
+                        <div class="upload-subtext">or drag and drop</div>
+                    </label>
+                    <div id="uploadedFileName" class="file-name"></div>
+                </div>
+                <div class="upload-notice">
+                    <div class="notice-icon">⚠️</div>
+                    <div class="notice-text">
+                        <strong>Note:</strong> Direct transcription of uploaded audio files requires a paid speech-to-text API. 
+                        For best results, please use the <strong>Live Recording</strong> option or paste a transcript from your meeting platform's built-in transcription feature.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="generate-section">
+            <button id="generateNotes" class="btn-primary btn-large">
+                <span class="btn-icon">✨</span>
+                Generate Notes
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="loadingState">
+            <div class="spinner"></div>
+            <p>Generating your meeting notes...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state hidden" id="errorState">
+            <div class="error-icon">❌</div>
+            <p id="errorMessage">An error occurred while generating notes.</p>
+            <button id="retryButton" class="btn-secondary">Retry</button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section hidden" id="outputSection">
+            <div class="output-header">
+                <h2>Generated Notes</h2>
+                <div class="export-buttons">
+                    <button id="copyNotes" class="btn-export" title="Copy to clipboard">
+                        <span class="export-icon">📋</span>
+                        Copy
+                    </button>
+                    <button id="downloadTxt" class="btn-export" title="Download as TXT">
+                        <span class="export-icon">📄</span>
+                        TXT
+                    </button>
+                    <button id="downloadWord" class="btn-export" title="Download as Word">
+                        <span class="export-icon">📝</span>
+                        Word
+                    </button>
+                    <button id="downloadPdf" class="btn-export" title="Download as PDF">
+                        <span class="export-icon">📕</span>
+                        PDF
+                    </button>
+                </div>
+            </div>
+            <div class="output-content" id="outputContent"></div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "groq-sdk": "https://esm.sh/groq-sdk@0.5.0"
+        }
+    }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
