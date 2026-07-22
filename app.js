@@ -309,6 +309,10 @@ function downloadTxt() {
 
 async function downloadWord() {
     try {
+        if (!window.docx) {
+            throw new Error('The Word export library could not be loaded');
+        }
+
         const { Document, Packer, Paragraph, HeadingLevel } = window.docx;
         const lines = generatedNotes.split('\n');
         const children = [];
