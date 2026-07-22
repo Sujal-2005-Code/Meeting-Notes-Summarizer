@@ -151,7 +151,11 @@ PREPARATION FOR NEXT SESSION
     }
 }
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log('Make sure to set GROQ_API_KEY in your .env file');
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+        console.log('Make sure to set GROQ_API_KEY in your .env file');
+    });
+}
+
+module.exports = app;
