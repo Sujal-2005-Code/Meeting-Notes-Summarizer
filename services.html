@@ -22,7 +22,7 @@
     <!-- ========== NAVIGATION ========== -->
     <nav class="nav-bar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <a href="#" class="nav-brand" aria-label="Briefly home">
+            <a href="index.html" class="nav-brand" aria-label="Briefly home">
                 <svg class="nav-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
                     <path d="M10 8h8a5 5 0 0 1 0 10h-8V8Z" fill="currentColor"/>
@@ -32,9 +32,9 @@
             </a>
             
             <ul class="nav-links">
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#templates" class="nav-link">Templates</a></li>
-                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="index.html#templates" class="nav-link">Templates</a></li>
+                <li><a href="index.html#pricing" class="nav-link">Pricing</a></li>
                 <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-link">GitHub</a></li>
             </ul>
             
@@ -45,75 +45,56 @@
         </div>
     </nav>
 
-    <!-- ========== HERO ========== -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
+    <!-- ========== SERVICES HUB ========== -->
+    <section class="services-hub" id="services">
+        <div class="services-header">
             <div class="hero-eyebrow">
-                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
-                <span>Powered by LLaMA 3.3</span>
+                <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
+                <span>Choose Your Tool</span>
             </div>
-            
-            <h1 class="hero-headline">Meeting Notes,<br>Done Instantly.</h1>
-            
+            <h1 class="hero-headline">Our Services</h1>
             <p class="hero-description">
-                Paste transcripts, upload audio, or record live meetings.
-                Receive beautiful AI-generated notes in seconds.
+                Select from our suite of AI-powered tools designed to streamline your workflow and boost productivity.
             </p>
-            
-            <div class="hero-actions">
-                <a href="services.html" class="btn-primary">
-                    <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
-                    Get Started
-                </a>
-                <button class="btn-secondary" id="watchDemo">
-                    <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i>
-                    Watch Demo
-                </button>
-            </div>
-            
-            <div class="hero-trust">
-                <div class="hero-stars">
-                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                </div>
-                <p class="hero-trust-text">Trusted by Students, Teams & Startups</p>
-            </div>
         </div>
-    </section>
-
-    <!-- ========== FEATURES ========== -->
-    <section class="features-section" id="features">
-        <div class="features-container">
-            <div class="features-header">
-                <h2 class="section-title">Everything you need</h2>
-                <p class="section-subtitle">Powerful tools to make your meetings more productive.</p>
+        
+        <div class="services-grid">
+            <!-- Active Service -->
+            <a href="meeting-notes.html" class="service-card active-service">
+                <div class="service-icon-wrapper">
+                    <i data-lucide="file-audio" style="width: 28px; height: 28px;"></i>
+                </div>
+                <h3 class="service-title">Meeting Notes Summarizer</h3>
+                <p class="service-desc">Transform meeting transcripts into organized, professional notes instantly.</p>
+                <div class="service-action">
+                    <span>Open Tool</span>
+                    <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                </div>
+            </a>
+            
+            <!-- Coming Soon Service 1 -->
+            <div class="service-card disabled-service">
+                <div class="service-badge">Coming Soon</div>
+                <div class="service-icon-wrapper">
+                    <i data-lucide="mail" style="width: 28px; height: 28px;"></i>
+                </div>
+                <h3 class="service-title">Email Thread Summarizer</h3>
+                <p class="service-desc">Condense long email chains into key points and action items.</p>
+                <div class="service-action">
+                    <span>Unavailable</span>
+                </div>
             </div>
             
-            <div class="features-grid">
-                <!-- Feature 1 -->
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper">
-                        <i data-lucide="file-text" style="width: 24px; height: 24px;"></i>
-                    </div>
-                    <h3 class="feature-title">Meeting Notes Summarizer</h3>
-                    <p class="feature-desc">Instantly transform transcripts and audio into beautifully formatted meeting notes using advanced AI models.</p>
+            <!-- Coming Soon Service 2 -->
+            <div class="service-card disabled-service">
+                <div class="service-badge">Coming Soon</div>
+                <div class="service-icon-wrapper">
+                    <i data-lucide="file-search" style="width: 28px; height: 28px;"></i>
                 </div>
-                
-                <!-- Feature 2 -->
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper">
-                        <i data-lucide="mic" style="width: 24px; height: 24px;"></i>
-                    </div>
-                    <h3 class="feature-title">Live Recording</h3>
-                    <p class="feature-desc">Record your meetings directly in the app and get real-time transcriptions without switching tabs.</p>
-                </div>
-                
-                <!-- Feature 3 -->
-                <div class="feature-card">
-                    <div class="feature-icon-wrapper">
-                        <i data-lucide="layout-template" style="width: 24px; height: 24px;"></i>
-                    </div>
-                    <h3 class="feature-title">Smart Templates</h3>
-                    <p class="feature-desc">Choose between business and educational templates for perfectly structured notes every time.</p>
+                <h3 class="service-title">Document Analyzer</h3>
+                <p class="service-desc">Extract insights, facts, and structure from massive PDF or Word documents.</p>
+                <div class="service-action">
+                    <span>Unavailable</span>
                 </div>
             </div>
         </div>

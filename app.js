@@ -60,13 +60,26 @@ const downloadPdfBtn = document.getElementById('downloadPdf');
 // ── Bootstrap ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     initializeNavbar();
-    initializeProgress();
-    setDefaultDate();
-    initializeTabs();
-    initializeRecording();
-    initializeUpload();
-    initializeSampleChips();
-    initializeEventListeners();
+    
+    // Only initialize app logic if the main app container exists
+    if (document.getElementById('app')) {
+        initializeProgress();
+        setDefaultDate();
+        initializeTabs();
+        initializeRecording();
+        initializeUpload();
+        initializeSampleChips();
+        initializeEventListeners();
+    }
+    
+    // Landing page specific logic
+    const watchDemoBtn = document.getElementById('watchDemo');
+    if (watchDemoBtn) {
+        watchDemoBtn.addEventListener('click', () => {
+            alert('Demo video coming soon!');
+        });
+    }
+    
     initializeLucideIcons();
 });
 
@@ -80,9 +93,9 @@ function initializeNavbar() {
         const currentScroll = window.pageYOffset;
         
         if (currentScroll > scrollThreshold) {
-            navbar.classList.add('scrolled');
+            navbar?.classList.add('scrolled');
         } else {
-            navbar.classList.remove('scrolled');
+            navbar?.classList.remove('scrolled');
         }
         
         lastScroll = currentScroll;

@@ -2040,3 +2040,189 @@ html {
     background: var(--accent-light);
     color: var(--text-primary);
 }
+
+/* =========================================================
+   Features Section
+   ========================================================= */
+.features-section {
+    padding: 80px 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.feature-card {
+    background: rgba(30, 30, 35, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(40, 40, 45, 0.6);
+}
+
+.feature-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: var(--primary-light);
+}
+
+.feature-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.feature-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================================
+   Services Hub
+   ========================================================= */
+.services-hub {
+    padding: 120px 24px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+}
+
+.service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 30, 35, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 32px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.active-service:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.disabled-service {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(20, 20, 25, 0.4);
+}
+
+.service-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.service-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: #fff;
+}
+
+.active-service .service-icon-wrapper {
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+}
+
+.service-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.service-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    flex-grow: 1;
+    margin-bottom: 24px;
+}
+
+.service-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s ease;
+}
+
+.active-service .service-action {
+    color: var(--primary-light);
+}
+
+.active-service:hover .service-action {
+    gap: 12px;
+}
