@@ -3,165 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting Notes Summarizer</title>
+    <title>Briefly — AI-Powered Meeting Notes</title>
+    <meta name="description" content="Transform your meeting transcripts into organized, professional notes instantly with AI. Powered by LLaMA 3.3.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Meeting Notes Summarizer</h1>
-            <p class="subtitle">Transform your transcripts into organized, professional notes</p>
-        </header>
 
-        <!-- Meeting Details -->
-        <div class="meeting-details">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="meetingTitle">Title:</label>
-                    <input type="text" id="meetingTitle" placeholder="Meeting title or topic">
-                </div>
-                <div class="form-group">
-                    <label for="meetingDate">Date:</label>
-                    <input type="date" id="meetingDate">
-                </div>
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav-bar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="#" class="nav-brand" aria-label="Briefly home">
+                <svg class="nav-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+                    <path d="M10 8h8a5 5 0 0 1 0 10h-8V8Z" fill="currentColor"/>
+                    <path d="M10 18h9a5 5 0 0 1 0 10h-9V18Z" fill="currentColor" opacity="0.7"/>
+                </svg>
+                <span>Briefly</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#templates" class="nav-link">Templates</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-link">GitHub</a></li>
+            </ul>
+            
+            <a href="#app" class="nav-cta">
+                Get Started
+                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+                <span>Powered by LLaMA 3.3</span>
             </div>
-            <div class="form-group">
-                <label for="attendees">Attendees/Participants:</label>
-                <input type="text" id="attendees" placeholder="Enter names separated by commas">
+            
+            <h1 class="hero-headline">Meeting Notes,<br>Done Instantly.</h1>
+            
+            <p class="hero-description">
+                Paste transcripts, upload audio, or record live meetings.
+                Receive beautiful AI-generated notes in seconds.
+            </p>
+            
+            <div class="hero-actions">
+                <a href="#app" class="btn-primary">
+                    <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+                    Get Started
+                </a>
+                <button class="btn-secondary" id="watchDemo">
+                    <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i>
+                    Watch Demo
+                </button>
+            </div>
+            
+            <div class="hero-trust">
+                <div class="hero-stars">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <p class="hero-trust-text">Trusted by Students, Teams & Startups</p>
             </div>
         </div>
+    </section>
 
-        <!-- Template Selection -->
-        <div class="template-section">
-            <h2>Select Template</h2>
-            <div class="template-options">
-                <label class="template-option">
-                    <input type="radio" name="template" value="business" checked>
-                    <span class="template-card">
-                        <div class="template-icon">💼</div>
-                        <div class="template-name">Business</div>
-                        <div class="template-desc">Client meetings, team meetings</div>
-                    </span>
-                </label>
-                <label class="template-option">
-                    <input type="radio" name="template" value="education">
-                    <span class="template-card">
-                        <div class="template-icon">🎓</div>
-                        <div class="template-name">Education</div>
-                        <div class="template-desc">Lectures, class sessions</div>
-                    </span>
-                </label>
+    <!-- ========== PROGRESS INDICATOR ========== -->
+    <div class="progress-bar" id="progressBar">
+        <div class="progress-container">
+            <div class="progress-line">
+                <div class="progress-line-fill" id="progressLineFill" style="width: 0%"></div>
             </div>
-        </div>
-
-        <!-- Input Methods -->
-        <div class="input-section">
-            <h2>Input Method</h2>
-            <div class="input-tabs">
-                <button class="tab-btn active" data-tab="paste">Paste Transcript</button>
-                <button class="tab-btn" data-tab="record">Live Recording</button>
-                <button class="tab-btn" data-tab="upload">Upload Audio</button>
+            
+            <div class="progress-step active" id="step1Progress">
+                <div class="progress-circle">1</div>
+                <span class="progress-label">Details</span>
             </div>
-
-            <!-- Paste Transcript Tab -->
-            <div class="tab-content active" id="paste-tab">
-                <textarea id="transcriptInput" placeholder="Paste your meeting transcript here..."></textarea>
+            
+            <div class="progress-step" id="step2Progress">
+                <div class="progress-circle">2</div>
+                <span class="progress-label">Input</span>
             </div>
-
-            <!-- Live Recording Tab -->
-            <div class="tab-content" id="record-tab">
-                <div class="recording-controls">
-                    <button id="startRecording" class="btn-primary">
-                        <span class="btn-icon">🎤</span>
-                        Start Recording
-                    </button>
-                    <button id="stopRecording" class="btn-danger" disabled>
-                        <span class="btn-icon">⏹️</span>
-                        Stop Recording
-                    </button>
-                </div>
-                <div class="recording-status" id="recordingStatus"></div>
-                <textarea id="liveTranscript" placeholder="Live transcript will appear here as you speak..." readonly></textarea>
+            
+            <div class="progress-step" id="step3Progress">
+                <div class="progress-circle">3</div>
+                <span class="progress-label">Notes</span>
             </div>
-
-            <!-- Upload Audio Tab -->
-            <div class="tab-content" id="upload-tab">
-                <div class="upload-area">
-                    <input type="file" id="audioUpload" accept="audio/*" hidden>
-                    <label for="audioUpload" class="upload-label">
-                        <div class="upload-icon">📁</div>
-                        <div class="upload-text">Click to upload audio file</div>
-                        <div class="upload-subtext">or drag and drop</div>
-                    </label>
-                    <div id="uploadedFileName" class="file-name"></div>
-                </div>
-                <div class="upload-notice">
-                    <div class="notice-icon">⚠️</div>
-                    <div class="notice-text">
-                        <strong>Note:</strong> Direct transcription of uploaded audio files requires a paid speech-to-text API. 
-                        For best results, please use the <strong>Live Recording</strong> option or paste a transcript from your meeting platform's built-in transcription feature.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Generate Button -->
-        <div class="generate-section">
-            <button id="generateNotes" class="btn-primary btn-large">
-                <span class="btn-icon">✨</span>
-                Generate Notes
-            </button>
-        </div>
-
-        <!-- Loading State -->
-        <div class="loading-state hidden" id="loadingState">
-            <div class="spinner"></div>
-            <p>Generating your meeting notes...</p>
-        </div>
-
-        <!-- Error State -->
-        <div class="error-state hidden" id="errorState">
-            <div class="error-icon">❌</div>
-            <p id="errorMessage">An error occurred while generating notes.</p>
-            <button id="retryButton" class="btn-secondary">Retry</button>
-        </div>
-
-        <!-- Output Section -->
-        <div class="output-section hidden" id="outputSection">
-            <div class="output-header">
-                <h2>Generated Notes</h2>
-                <div class="export-buttons">
-                    <button id="copyNotes" class="btn-export" title="Copy to clipboard">
-                        <span class="export-icon">📋</span>
-                        Copy
-                    </button>
-                    <button id="downloadTxt" class="btn-export" title="Download as TXT">
-                        <span class="export-icon">📄</span>
-                        TXT
-                    </button>
-                    <button id="downloadWord" class="btn-export" title="Download as Word">
-                        <span class="export-icon">📝</span>
-                        Word
-                    </button>
-                    <button id="downloadPdf" class="btn-export" title="Download as PDF">
-                        <span class="export-icon">📕</span>
-                        PDF
-                    </button>
-                </div>
-            </div>
-            <div class="output-content" id="outputContent"></div>
         </div>
     </div>
 
-    <script type="importmap">
-    {
-        "imports": {
-            "groq-sdk": "https://esm.sh/groq-sdk@0.5.0"
-        }
-    }
-    </script>
+
+    <!-- ========== MAIN APPLICATION ========== -->
+    <main id="app" class="main-container" role="main">
+        <div class="content-grid">
+
+            <!-- CARD 1: Meeting Details -->
+            <section class="glass-card" id="card1">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div class="card-title-group">
+                        <p class="card-step">Step 1</p>
+                        <h2 class="card-title">Meeting Details</h2>
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="field-label" for="meetingTitle">
+                            <i data-lucide="file-text" class="label-icon"></i>
+                            Title
+                        </label>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="edit-3" class="field-icon"></i>
+                            <input
+                                type="text"
+                                id="meetingTitle"
+                                class="field-input"
+                                placeholder="e.g. Q4 Planning Meeting"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="field-label" for="meetingDate">
+                            <i data-lucide="calendar-days" class="label-icon"></i>
+                            Date
+                        </label>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="calendar" class="field-icon"></i>
+                            <input
+                                type="date"
+                                id="meetingDate"
+                                class="field-input"
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-field full-width">
+                        <label class="field-label" for="attendees">
+                            <i data-lucide="users" class="label-icon"></i>
+                            Attendees
+                        </label>
+                        <div class="field-input-wrapper">
+                            <i data-lucide="user-plus" class="field-icon"></i>
+                            <input
+                                type="text"
+                                id="attendees"
+                                class="field-input"
+                                placeholder="e.g. Sarah Johnson, Marcus Chen, Priya Patel"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- CARD 2: Template Selection -->
+            <section class="glass-card" id="card2">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i data-lucide="layout-template" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div class="card-title-group">
+                        <p class="card-step">Step 2</p>
+                        <h2 class="card-title">Choose Template</h2>
+                    </div>
+                </div>
+                
+                <div class="template-grid" role="radiogroup" aria-labelledby="card2">
+                    <label class="template-option">
+                        <input type="radio" name="template" value="business" checked aria-label="Business template">
+                        <div class="template-card">
+                            <div class="template-icon-box">💼</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Business</h3>
+                                <p class="template-desc">Professional meetings, client calls & standups</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="template-option">
+                        <input type="radio" name="template" value="education" aria-label="Education template">
+                        <div class="template-card">
+                            <div class="template-icon-box">🎓</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Education</h3>
+                                <p class="template-desc">Lectures, workshops, classes & seminars</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- CARD 3: Input Method -->
+            <section class="glass-card" id="card3">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i data-lucide="file-input" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div class="card-title-group">
+                        <p class="card-step">Step 3</p>
+                        <h2 class="card-title">Add Transcript</h2>
+                    </div>
+                </div>
+                
+                <!-- Tab Bar -->
+                <div class="tab-bar" role="tablist" aria-label="Input method">
+                    <button class="tab-btn active" role="tab" data-tab="paste" 
+                            aria-selected="true" aria-controls="paste-tab" id="tab-paste">
+                        <i data-lucide="clipboard" class="tab-icon"></i>
+                        <span>Paste</span>
+                    </button>
+                    <button class="tab-btn" role="tab" data-tab="record" 
+                            aria-selected="false" aria-controls="record-tab" id="tab-record">
+                        <i data-lucide="mic" class="tab-icon"></i>
+                        <span>Record</span>
+                    </button>
+                    <button class="tab-btn" role="tab" data-tab="upload" 
+                            aria-selected="false" aria-controls="upload-tab" id="tab-upload">
+                        <i data-lucide="upload" class="tab-icon"></i>
+                        <span>Upload</span>
+                    </button>
+                </div>
+                
+                <!-- Paste Tab -->
+                <div class="tab-content active" id="paste-tab" role="tabpanel" aria-labelledby="tab-paste">
+                    <textarea
+                        class="field-textarea"
+                        id="transcriptInput"
+                        placeholder="Paste your meeting transcript here…"
+                        aria-label="Meeting transcript"
+                        spellcheck="false"
+                    ></textarea>
+                    
+                    <!-- Sample Chips -->
+                    <div class="sample-chips">
+                        <button class="chip" data-sample="business">
+                            <i data-lucide="briefcase" class="chip-icon"></i>
+                            <span>Business Meeting</span>
+                        </button>
+                        <button class="chip" data-sample="client">
+                            <i data-lucide="phone" class="chip-icon"></i>
+                            <span>Client Call</span>
+                        </button>
+                        <button class="chip" data-sample="lecture">
+                            <i data-lucide="graduation-cap" class="chip-icon"></i>
+                            <span>Lecture</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Record Tab -->
+                <div class="tab-content" id="record-tab" role="tabpanel" aria-labelledby="tab-record">
+                    <div class="recording-row">
+                        <button id="startRecording" class="btn-icon-text btn-start" aria-label="Start recording">
+                            <i data-lucide="mic" style="width: 18px; height: 18px;"></i>
+                            <span>Start Recording</span>
+                        </button>
+                        <button id="stopRecording" class="btn-icon-text btn-stop" disabled aria-label="Stop recording">
+                            <i data-lucide="square" style="width: 18px; height: 18px;"></i>
+                            <span>Stop</span>
+                        </button>
+                        <span class="recording-pill" id="recordingStatus" role="status" aria-live="polite">
+                            <span class="rec-dot" aria-hidden="true"></span>
+                            <span id="recordingStatusText">Ready</span>
+                        </span>
+                    </div>
+                    
+                    <textarea
+                        class="field-textarea"
+                        id="liveTranscript"
+                        placeholder="Your voice will appear here in real-time…"
+                        readonly
+                        aria-label="Live transcript"
+                        aria-live="polite"
+                    ></textarea>
+                </div>
+                
+                <!-- Upload Tab -->
+                <div class="tab-content" id="upload-tab" role="tabpanel" aria-labelledby="tab-upload">
+                    <input type="file" id="audioUpload" accept="audio/*" hidden aria-label="Upload audio file">
+                    <label for="audioUpload" class="upload-zone" role="button" tabindex="0" 
+                           aria-label="Upload audio file">
+                        <i data-lucide="cloud-upload" class="upload-icon"></i>
+                        <h3 class="upload-title">Drag transcript here</h3>
+                        <p class="upload-subtitle">or <span>Browse Files</span></p>
+                    </label>
+                    
+                    <div class="upload-result" id="uploadResult">
+                        <div class="upload-file-icon">
+                            <i data-lucide="file-audio" style="width: 18px; height: 18px;"></i>
+                        </div>
+                        <div class="upload-file-info">
+                            <p class="upload-file-name" id="uploadFileName">audio.mp3</p>
+                            <p class="upload-file-size" id="uploadFileSize">2.4 MB</p>
+                        </div>
+                        <button class="upload-remove" id="uploadRemove" aria-label="Remove file">
+                            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="upload-notice">
+                        <span class="notice-icon">💡</span>
+                        <p class="notice-text">
+                            <strong>Note:</strong> Direct audio transcription requires a paid API.
+                            For best results, use <strong>Live Recording</strong> or paste a transcript
+                            from your meeting platform.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <div class="generate-section">
+                <button id="generateNotes" class="btn-generate" aria-label="Generate meeting notes">
+                    <i data-lucide="sparkles" class="generate-icon"></i>
+                    <span>Generate Notes</span>
+                </button>
+            </div>
+
+            <!-- AI Processing State -->
+            <div class="ai-processing hidden" id="loadingState" role="status" aria-live="polite" aria-label="Processing">
+                <div class="ai-spinner-wrapper">
+                    <div class="ai-spinner"></div>
+                </div>
+                <h3 class="ai-title">Processing Your Notes</h3>
+                <p class="ai-status" id="aiStatus">Analyzing transcript…</p>
+                <div class="ai-progress-bar">
+                    <div class="ai-progress-fill" id="aiProgressFill" style="width: 0%"></div>
+                </div>
+                <p class="ai-time" id="aiTime">Estimated time: 10-15 seconds</p>
+            </div>
+
+
+            <!-- Error State -->
+            <div class="error-card hidden" id="errorState" role="alert" aria-live="assertive">
+                <div class="error-icon-wrap">
+                    <i data-lucide="alert-circle" class="error-icon"></i>
+                </div>
+                <div class="error-content">
+                    <h3 class="error-title">Something went wrong</h3>
+                    <p class="error-message" id="errorMessage">An unexpected error occurred.</p>
+                    <button id="retryButton" class="btn-icon-text btn-start">
+                        <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+                        <span>Try Again</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-card hidden" id="outputSection" aria-live="polite" aria-label="Generated notes">
+                <div class="output-toolbar">
+                    <span class="output-label">Your Notes</span>
+                    <div class="export-group" role="group" aria-label="Export options">
+                        <button id="copyNotes" class="btn-export" aria-label="Copy to clipboard">
+                            <i data-lucide="copy" class="export-icon"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button id="downloadTxt" class="btn-export" aria-label="Download as text">
+                            <i data-lucide="file-text" class="export-icon"></i>
+                            <span>TXT</span>
+                        </button>
+                        <button id="downloadWord" class="btn-export" aria-label="Download as Word">
+                            <i data-lucide="file-type" class="export-icon"></i>
+                            <span>Word</span>
+                        </button>
+                        <button id="downloadPdf" class="btn-export" aria-label="Download as PDF">
+                            <i data-lucide="file-down" class="export-icon"></i>
+                            <span>PDF</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="output-body" id="outputContent" aria-label="Notes content"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container">
+            <a href="#" class="footer-brand">
+                <svg class="footer-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="28" height="28" rx="7" fill="currentColor" opacity="0.1"/>
+                    <path d="M8 7h7a4.5 4.5 0 0 1 0 9H8V7Z" fill="currentColor"/>
+                    <path d="M8 16h8a4.5 4.5 0 0 1 0 9H8v-9Z" fill="currentColor" opacity="0.7"/>
+                </svg>
+                <span>Briefly</span>
+            </a>
+            
+            <ul class="footer-links">
+                <li><a href="#" class="footer-link">Privacy</a></li>
+                <li><a href="#" class="footer-link">Terms</a></li>
+                <li><a href="https://github.com" target="_blank" rel="noopener" class="footer-link">GitHub</a></li>
+                <li><a href="#" class="footer-link">Documentation</a></li>
+            </ul>
+            
+            <p class="footer-credit">
+                Made with ❤️ using <a href="https://groq.com" target="_blank" rel="noopener">Groq</a> & LLaMA 3.3
+            </p>
+        </div>
+    </footer>
+
+    <!-- Third-party Libraries -->
+    <script src="https://unpkg.com/docx@7.8.2/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
-    <script type="module" src="app.js"></script>
+    
+    <!-- Application Script -->
+    <script src="app.js" defer></script>
+    
+    <!-- Initialize Lucide Icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+
 </body>
 </html>

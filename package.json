@@ -1,7 +1,7 @@
 {
-  "name": "meeting-notes-summarizer",
+  "name": "briefly",
   "version": "1.0.0",
-  "description": "AI-powered meeting notes summarizer with multiple input methods and export options",
+  "description": "Briefly - Transform your transcripts into organized, professional notes with AI",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
