@@ -6,9 +6,10 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "index.html",
-          "app.js",
-          "styles.css"
+          "*.html",
+          "*.js",
+          "*.css",
+          "node_modules/pdf-parse/test/data/**/*.pdf"
         ]
       }
     }
