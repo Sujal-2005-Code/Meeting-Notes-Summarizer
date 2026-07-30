@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const Groq = require('groq-sdk');
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +16,10 @@ app.use(express.static('.'));
 
 // Initialize Groq client
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// Setup multer for file uploads (in memory)
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB limit
+
 
 // Generate notes endpoint
 app.post('/api/generate-notes', async (req, res) => {
@@ -54,6 +61,130 @@ app.post('/api/generate-notes', async (req, res) => {
             error: 'Failed to generate notes', 
             details: error.message 
         });
+    }
+});
+
+// ── Email Summarizer Endpoint ─────────────────────────────
+app.post('/api/summarize-email', async (req, res) => {
+    try {
+        const { thread, subject, participants } = req.body;
+
+        if (!thread) {
+            return res.status(400).json({ error: 'Email thread is required' });
+        }
+
+        if (!process.env.GROQ_API_KEY) {
+            return res.status(500).json({ error: 'Groq API key not configured on server' });
+        }
+
+        console.log('Summarizing email thread:', subject);
+        
+        const prompt = `You are a professional assistant summarizing an email thread.
+        
+IMPORTANT RULES:
+- Only include information present in the email thread
+- Be highly concise
+- Extract key action items with their owners
+
+Email Context:
+- Subject: ${subject || 'Not specified'}
+- Participants: ${participants || 'Not specified'}
+
+Email Thread:
+${thread}
+
+Format the output exactly like this:
+EXECUTIVE SUMMARY
+[2-3 sentence overview of the email thread]
+
+KEY POINTS
+- [Point 1]
+- [Point 2]
+
+ACTION ITEMS
+- [Owner]: [Task] - [Deadline if any]
+`;
+
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [{ role: 'user', content: prompt }],
+            model: 'llama-3.3-70b-versatile',
+            temperature: 0.3,
+            max_tokens: 2048,
+        });
+
+        res.json({ summary: chatCompletion.choices[0]?.message?.content || '' });
+    } catch (error) {
+        console.error('Error summarizing email:', error);
+        res.status(500).json({ error: 'Failed to summarize email', details: error.message });
+    }
+});
+
+// ── Document Analyzer Endpoint ─────────────────────────────
+app.post('/api/analyze-document', upload.single('document'), async (req, res) => {
+    try {
+        const { analysisType, pastedText } = req.body;
+        let documentText = pastedText || '';
+
+        if (!process.env.GROQ_API_KEY) {
+            return res.status(500).json({ error: 'Groq API key not configured on server' });
+        }
+
+        // Process uploaded file if it exists
+        if (req.file) {
+            console.log('Processing file:', req.file.originalname, req.file.mimetype);
+            if (req.file.mimetype === 'application/pdf') {
+                const pdfData = await pdfParse(req.file.buffer);
+                documentText = pdfData.text;
+            } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+                documentText = result.value;
+            } else if (req.file.mimetype === 'text/plain') {
+                documentText = req.file.buffer.toString('utf8');
+            } else {
+                return res.status(400).json({ error: 'Unsupported file format. Please upload PDF, DOCX, or TXT.' });
+            }
+        }
+
+        if (!documentText.trim()) {
+            return res.status(400).json({ error: 'No text found to analyze. Please upload a valid document or paste text.' });
+        }
+
+        // Basic safeguard: truncate very large documents to ~20000 characters to prevent token limits
+        if (documentText.length > 20000) {
+            documentText = documentText.substring(0, 20000) + '... [DOCUMENT TRUNCATED DUE TO LENGTH LIMITS]';
+        }
+
+        console.log('Analyzing document. Type:', analysisType);
+
+        let systemPrompt = '';
+        if (analysisType === 'summary') {
+            systemPrompt = 'Provide a comprehensive 3-4 paragraph executive summary of the document. Then, list the 5 most important facts or insights.';
+        } else if (analysisType === 'entities') {
+            systemPrompt = 'Extract all key entities from the document. Format as lists: \n1. PEOPLE\n2. ORGANIZATIONS\n3. LOCATIONS\n4. DATES/EVENTS\n5. KEY TERMINOLOGY';
+        } else if (analysisType === 'action') {
+            systemPrompt = 'Extract all implied or explicit action items, decisions, and next steps from this document. If none exist, state that clearly.';
+        } else {
+            systemPrompt = 'Provide a detailed structural breakdown of the document, summarizing the core topic of each section.';
+        }
+
+        const prompt = `You are a professional document analyst.
+Task: ${systemPrompt}
+
+Document Text:
+${documentText}
+`;
+
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [{ role: 'user', content: prompt }],
+            model: 'llama-3.3-70b-versatile',
+            temperature: 0.2,
+            max_tokens: 4096,
+        });
+
+        res.json({ analysis: chatCompletion.choices[0]?.message?.content || '' });
+    } catch (error) {
+        console.error('Error analyzing document:', error);
+        res.status(500).json({ error: 'Failed to analyze document', details: error.message });
     }
 });
 

@@ -2219,10 +2219,11 @@ html {
     transition: color 0.2s ease;
 }
 
-.active-service .service-action {
-    color: var(--primary-light);
-}
 
-.active-service:hover .service-action {
-    gap: 12px;
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+.hidden {
+    display: none !important;
 }

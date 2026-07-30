@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Briefly — Document Analyzer</title>
+    <meta name="description" content="Extract insights, facts, and structure from massive PDF or Word documents. Powered by LLaMA 3.3.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="nav-bar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand" aria-label="Briefly home">
+                <svg class="nav-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+                    <path d="M10 8h8a5 5 0 0 1 0 10h-8V8Z" fill="currentColor"/>
+                    <path d="M10 18h9a5 5 0 0 1 0 10h-9V18Z" fill="currentColor" opacity="0.7"/>
+                </svg>
+                <span>Briefly</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html#features" class="nav-link">Features</a></li>
+                <li><a href="index.html#templates" class="nav-link">Templates</a></li>
+                <li><a href="index.html#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="https://github.com" target="_blank" rel="noopener" class="nav-link">GitHub</a></li>
+            </ul>
+            
+            <a href="services.html" class="nav-cta">
+                Services
+                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+    </nav>
+
+
+    <!-- ========== PROGRESS INDICATOR ========== -->
+    <div class="progress-bar" id="progressBar">
+        <div class="progress-container">
+            <div class="progress-line">
+                <div class="progress-line-fill" id="progressLineFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="progress-step active" id="step1Progress">
+                <div class="progress-circle">1</div>
+                <span class="progress-label">Upload</span>
+            </div>
+            
+            <div class="progress-step" id="step2Progress">
+                <div class="progress-circle">2</div>
+                <span class="progress-label">Analysis Type</span>
+            </div>
+            
+            <div class="progress-step" id="step3Progress">
+                <div class="progress-circle">3</div>
+                <span class="progress-label">Results</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========== MAIN APPLICATION ========== -->
+    <main id="doc-app" class="main-container" role="main">
+        <div class="content-grid">
+
+            <!-- CARD 1: Upload Document -->
+            <section class="glass-card" id="card1">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i data-lucide="upload-cloud" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div class="card-title-group">
+                        <p class="card-step">Step 1</p>
+                        <h2 class="card-title">Add Document</h2>
+                    </div>
+                </div>
+                
+                <!-- Tab Bar -->
+                <div class="tab-bar" role="tablist" aria-label="Input method">
+                    <button class="tab-btn active" role="tab" data-tab="upload" 
+                            aria-selected="true" aria-controls="upload-tab" id="tab-upload">
+                        <i data-lucide="file-up" class="tab-icon"></i>
+                        <span>Upload File</span>
+                    </button>
+                    <button class="tab-btn" role="tab" data-tab="paste" 
+                            aria-selected="false" aria-controls="paste-tab" id="tab-paste">
+                        <i data-lucide="clipboard" class="tab-icon"></i>
+                        <span>Paste Text</span>
+                    </button>
+                </div>
+                
+                <!-- Upload Tab -->
+                <div class="tab-content active" id="upload-tab" role="tabpanel" aria-labelledby="tab-upload">
+                    <input type="file" id="docUpload" accept=".pdf,.docx,.txt" hidden aria-label="Upload document file">
+                    <label for="docUpload" class="upload-zone" role="button" tabindex="0" 
+                           aria-label="Upload document file">
+                        <i data-lucide="cloud-upload" class="upload-icon"></i>
+                        <h3 class="upload-title">Drag document here</h3>
+                        <p class="upload-subtitle">or <span>Browse Files</span></p>
+                    </label>
+                    
+                    <div class="upload-result" id="uploadResult">
+                        <div class="upload-file-icon">
+                            <i data-lucide="file-text" style="width: 18px; height: 18px;"></i>
+                        </div>
+                        <div class="upload-file-info">
+                            <p class="upload-file-name" id="uploadFileName">document.pdf</p>
+                            <p class="upload-file-size" id="uploadFileSize">2.4 MB</p>
+                        </div>
+                        <button class="upload-remove" id="uploadRemove" aria-label="Remove file">
+                            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="upload-notice">
+                        <span class="notice-icon">📄</span>
+                        <p class="notice-text">
+                            <strong>Supported formats:</strong> PDF, Word (.docx), and TXT files. Max size 10MB.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Paste Tab -->
+                <div class="tab-content" id="paste-tab" role="tabpanel" aria-labelledby="tab-paste">
+                    <textarea
+                        class="field-textarea"
+                        id="docTextInput"
+                        placeholder="Paste the document text here…"
+                        aria-label="Document text"
+                        spellcheck="false"
+                        style="min-height: 200px;"
+                    ></textarea>
+                </div>
+            </section>
+
+            <!-- CARD 2: Analysis Type Selection -->
+            <section class="glass-card" id="card2">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i data-lucide="brain-circuit" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <div class="card-title-group">
+                        <p class="card-step">Step 2</p>
+                        <h2 class="card-title">Choose Analysis Type</h2>
+                    </div>
+                </div>
+                
+                <div class="template-grid" role="radiogroup" aria-labelledby="card2">
+                    <label class="template-option">
+                        <input type="radio" name="analysisType" value="summary" checked aria-label="Executive Summary">
+                        <div class="template-card">
+                            <div class="template-icon-box">📊</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Executive Summary</h3>
+                                <p class="template-desc">High-level overview and top insights</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="template-option">
+                        <input type="radio" name="analysisType" value="entities" aria-label="Key Entities">
+                        <div class="template-card">
+                            <div class="template-icon-box">🔍</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Key Entities</h3>
+                                <p class="template-desc">Extract people, places, dates & terms</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="template-option">
+                        <input type="radio" name="analysisType" value="action" aria-label="Action Items">
+                        <div class="template-card">
+                            <div class="template-icon-box">✅</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Action Items</h3>
+                                <p class="template-desc">Extract implied next steps & decisions</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                    
+                    <label class="template-option">
+                        <input type="radio" name="analysisType" value="structure" aria-label="Structural Breakdown">
+                        <div class="template-card">
+                            <div class="template-icon-box">📑</div>
+                            <div class="template-content">
+                                <h3 class="template-name">Structural Breakdown</h3>
+                                <p class="template-desc">Section-by-section topic summary</p>
+                            </div>
+                            <div class="template-check">
+                                <i data-lucide="check" class="check-icon"></i>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <div class="generate-section">
+                <button id="generateAnalysisBtn" class="btn-generate" aria-label="Analyze Document">
+                    <i data-lucide="sparkles" class="generate-icon"></i>
+                    <span>Analyze Document</span>
+                </button>
+            </div>
+
+            <!-- AI Processing State -->
+            <div class="ai-processing hidden" id="loadingState" role="status" aria-live="polite" aria-label="Processing">
+                <div class="ai-spinner-wrapper">
+                    <div class="ai-spinner"></div>
+                </div>
+                <h3 class="ai-title">Analyzing Document</h3>
+                <p class="ai-status" id="aiStatus">Parsing document structure…</p>
+                <div class="ai-progress-bar">
+                    <div class="ai-progress-fill" id="aiProgressFill" style="width: 0%"></div>
+                </div>
+                <p class="ai-time" id="aiTime">Estimated time: 10-20 seconds</p>
+            </div>
+
+
+            <!-- Error State -->
+            <div class="error-card hidden" id="errorState" role="alert" aria-live="assertive">
+                <div class="error-icon-wrap">
+                    <i data-lucide="alert-circle" class="error-icon"></i>
+                </div>
+                <div class="error-content">
+                    <h3 class="error-title">Something went wrong</h3>
+                    <p class="error-message" id="errorMessage">An unexpected error occurred.</p>
+                    <button id="retryButton" class="btn-icon-text btn-start">
+                        <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+                        <span>Try Again</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="output-card hidden" id="outputSection" aria-live="polite" aria-label="Generated analysis">
+                <div class="output-toolbar">
+                    <span class="output-label">Analysis Results</span>
+                    <div class="export-group" role="group" aria-label="Export options">
+                        <button id="copyAnalysis" class="btn-export" aria-label="Copy to clipboard">
+                            <i data-lucide="copy" class="export-icon"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="output-body" id="outputContent" aria-label="Analysis content"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container">
+            <a href="index.html" class="footer-brand">
+                <svg class="footer-logo" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="28" height="28" rx="7" fill="currentColor" opacity="0.1"/>
+                    <path d="M8 7h7a4.5 4.5 0 0 1 0 9H8V7Z" fill="currentColor"/>
+                    <path d="M8 16h8a4.5 4.5 0 0 1 0 9H8v-9Z" fill="currentColor" opacity="0.7"/>
+                </svg>
+                <span>Briefly</span>
+            </a>
+            
+            <ul class="footer-links">
+                <li><a href="#" class="footer-link">Privacy</a></li>
+                <li><a href="#" class="footer-link">Terms</a></li>
+                <li><a href="https://github.com" target="_blank" rel="noopener" class="footer-link">GitHub</a></li>
+                <li><a href="#" class="footer-link">Documentation</a></li>
+            </ul>
+            
+            <p class="footer-credit">
+                Made with ❤️ using <a href="https://groq.com" target="_blank" rel="noopener">Groq</a> & LLaMA 3.3
+            </p>
+        </div>
+    </footer>
+
+    <!-- Application Script -->
+    <script src="document-analyzer.js" defer></script>
+    
+    <!-- Initialize Lucide Icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
